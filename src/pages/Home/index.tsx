@@ -12,7 +12,10 @@ export const Home = () => {
   const { state, dispatch } = useReducerWithMiddleware<typeof todosReducer>(
     todosReducer,
     defaultState,
-    [requestAllTodosEffect, logActionEffect]
+    {
+      'REQUEST_TODOS': [requestAllTodosEffect],
+      '*': [logActionEffect],
+    }
   )
 
   const handleButtonClick = () => dispatch(requestTodos())

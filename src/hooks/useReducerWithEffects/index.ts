@@ -11,7 +11,9 @@ import { TEffect } from 'src/hooks/useReducerWithEffects/types'
 export const useReducerWithMiddleware = <TReducer extends Reducer<any, any>>(
   reducer: TReducer,
   initialState: ReducerState<TReducer>,
-  effects: TEffect<TReducer>[] = []
+  effects: {
+    [key in Pick<ReducerAction<TReducer>, 'type'>['type'] | '*']?: TEffect<TReducer>[]
+  }
 ) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -26,9 +28,20 @@ export const useReducerWithMiddleware = <TReducer extends Reducer<any, any>>(
   useEffect(() => {
     const action = aRef.current
     if (action) {
-      effects.forEach((effect) => {
-        effect(state, dispatch, action)
-      })
+      const type = action.type as Pick<ReducerAction<TReducer>, 'type'>['type']
+      const actionEffects = effects[type]
+      if (actionEffects) {
+        actionEffects.forEach((effect: any) => {
+          effect(state, dispatch, action)
+        })
+      }
+
+      const wildcardEffects = effects['*']
+      if (wildcardEffects) {
+        wildcardEffects.forEach((effect: any) => {
+          effect(state, dispatch, action)
+        })
+      }
     }
 
     aRef.current = undefined
