@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { TEffect } from 'src/hooks/useReducerWithEffects/types'
 
-export const useReducerWithMiddleware = <TReducer extends Reducer<any, any>>(
+export const useReducerWithEffects = <TReducer extends Reducer<any, any>>(
   reducer: TReducer,
   initialState: ReducerState<TReducer>,
   effects: {

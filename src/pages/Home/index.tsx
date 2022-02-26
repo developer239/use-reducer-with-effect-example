@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout } from 'src/components/Layout'
-import { useReducerWithMiddleware } from 'src/hooks/useReducerWithEffects'
+import { useReducerWithEffects } from 'src/hooks/useReducerWithEffects'
 import { todosReducer, defaultState } from 'src/store/todos/reducer'
 import { requestTodos } from 'src/store/todos/reducer/actions'
 import {
@@ -9,7 +9,7 @@ import {
 } from 'src/store/todos/reducer/effects'
 
 export const Home = () => {
-  const { state, dispatch } = useReducerWithMiddleware<typeof todosReducer>(
+  const { state, dispatch } = useReducerWithEffects<typeof todosReducer>(
     todosReducer,
     defaultState,
     {
@@ -22,12 +22,15 @@ export const Home = () => {
 
   return (
     <Layout>
+      <button type="button" onClick={handleButtonClick}>
+        request todos
+      </button>
       <div>
-        <button type="button" onClick={handleButtonClick}>
-          request todos
-        </button>
+        {state.isLoading && <span>loading...</span>}
+        {state.data.map((todo) => (
+          <span key={todo.id}>{todo.title}</span>
+        ))}
       </div>
-      {JSON.stringify(state, null, 2)}
     </Layout>
   )
 }
