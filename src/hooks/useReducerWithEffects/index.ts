@@ -13,7 +13,7 @@ export const useReducerWithEffects = <TReducer extends Reducer<any, any>>(
   initialState: ReducerState<TReducer>,
   effects: {
     [key in Pick<ReducerAction<TReducer>, 'type'>['type'] | '*']?: TEffect<TReducer>[]
-  }
+  } = {}
 ) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
